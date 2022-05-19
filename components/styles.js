@@ -13,6 +13,7 @@ export const Colors = {
   brand: '#00CC6A',
   green: '#00CC6A',
   red: '#EF4444',
+  purple: '#9457eb',
 };
 
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
@@ -28,6 +29,12 @@ export const InnerContainer = styled.View`
   width: 100%;
   flex: 1;
   align-items: center;
+`;
+
+export const PanicContainer = styled(InnerContainer)`
+  padding: 25px;
+  padding-top: 10px;
+  justify-content: center;
 `;
 
 export const WelcomeContainer = styled(InnerContainer)`
@@ -57,11 +64,29 @@ export const WelcomeImage = styled.Image`
   min-width: 100%;
 `;
 
+export const PanicButtonImage = styled.Image`
+  width: 300px;
+  height: 300px;
+`;
+
 export const PageTitle = styled.Text`
   font-size: 30px;
   text-align: center;
   font-weight: bold;
   color: ${Colors.brand};
+  padding: 10px;
+
+  ${(props) =>
+    props.welcome &&
+    `
+    font-size: 35px;
+  `}
+`;
+export const PanicTitle = styled.Text`
+  font-size: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: ${Colors.purple};
   padding: 10px;
 
   ${(props) =>
@@ -137,6 +162,31 @@ export const StyledButton = styled.TouchableOpacity`
   `}
 `;
 
+export const PanicButton = styled.TouchableOpacity`
+  padding: 1px;
+  border-width: 1px;
+  border-color: ${red};
+  align-items: center;
+  justify-content: center;
+  background-color: ${red};
+  border-radius: 200px;
+  height: 280px;
+  margin-top: 100px;
+`;
+
+export const PanicButton2 = styled.TouchableOpacity`
+  
+  align-items: center;
+`;
+
+export const PanicButtonText = styled.Text`
+  color: ${red};
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;  
+`;
+
 export const ButtonText = styled.Text`
   color: ${primary};
   font-size: 16px;
@@ -152,7 +202,7 @@ export const ButtonText = styled.Text`
 export const MsgBox = styled.Text`
   text-align: center;
   font-size: 13px;
-  color: ${props => props.type == "SUCCESS" ? green : red};
+  color: ${(props) => (props.type == 'SUCCESS' ? green : red)};
 `;
 
 export const Line = styled.View`

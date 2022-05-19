@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // credentials context
 import { CredentialsContext } from './../components/CredentialsContext';
 
-const Welcome = () => {
+const Welcome = ({ navigation }) => {
 
   // const { name, email, photoUrl } = route.params.storedCredentials ? route.params.storedCredentials : route.params;
 
@@ -36,7 +36,7 @@ const Welcome = () => {
     : require('./../assets/img/expo-bg1.png');
 
   const clearLogin = () => {
-    AsyncStorage.removeItem('flowerCribCredentials')
+    AsyncStorage.removeItem('mulherMiguelenseCredentials')
       .then(() => {
         setStoredCredentials("");
       })
@@ -50,7 +50,7 @@ const Welcome = () => {
         <WelcomeImage resizeMode="cover" source={require('./../assets/img/expo-bg2.png')} />
 
         <WelcomeContainer>
-          <PageTitle welcome={true}>Welcome! Buddy</PageTitle>
+          <PageTitle welcome={true}>Bem-vinda!</PageTitle>
           <SubTitle welcome={true}>{name || 'Olga Simpson'}</SubTitle>
           <SubTitle welcome={true}>{email || 'olgasimp@gmail.com'}</SubTitle>
 
@@ -58,6 +58,9 @@ const Welcome = () => {
             <Avatar resizeMode="cover" source={AvatarImg} />
 
             <Line />
+            <StyledButton onPress={() => navigation.navigate('Home')}>
+              <ButtonText>Entrar</ButtonText>
+            </StyledButton>
             <StyledButton onPress={clearLogin}>
               <ButtonText>Logout</ButtonText>
             </StyledButton>

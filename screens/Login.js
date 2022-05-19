@@ -40,7 +40,9 @@ import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 import axios from 'axios';
 
 // Google Signin
-import * as Google from 'expo-google-app-auth';
+// import * as Google from 'expo-google-app-auth';
+
+import * as Google from 'expo-auth-session/providers/google';
 
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -55,7 +57,13 @@ const Login = ({ navigation }) => {
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
   // credentials context
-  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+  const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: `827228531495-v65tkdotorf17ib8sf0o7pk824p9qone.apps.googleusercontent.com`,
+    androidClientId: `827228531495-a4ibp8iheckl0eecjd3gjg1omkpmn1ei.apps.googleusercontent.com`,
+    expoClientId: `827228531495-vnchh17sba47nv5pebr3ok9i7h0hkufq.apps.googleusercontent.com`,
+  });
 
   const handleLogin = (credentials, setSubmitting) => {
     handleMessage(null);
@@ -84,36 +92,51 @@ const Login = ({ navigation }) => {
     setMessage(message);
     setMessageType(type);
   };
+ 
 
-  const handleGoogleSignin = () => {
-    setGoogleSubmitting(true);
-    const config = {
-      iosClientId: `782607156495-2de6ecovh62rsu1ec5cduv9li7g33ki3.apps.googleusercontent.com`,
-      androidClientId: `827228531495-a4ibp8iheckl0eecjd3gjg1omkpmn1ei.apps.googleusercontent.com`,
-      scopes: ['profile', 'email'],
-    };
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+    }
+  }, [response]);
 
-    Google.logInAsync(config)
-      .then((result) => {
-        const { type, user } = result;
-        if (type == 'success') {
-          const { email, name, photoUrl } = user;
-          persistLogin({ email, name, photoUrl }, 'Google signin successful', 'SUCCESS');
-        } else {
-          handleMessage('Google Signin was cancelled');
-        }
-        setGoogleSubmitting(false);
-      })
-      .catch((error) => {
-        handleMessage('An error occurred. Check your network and try again');
-        console.log(error);
-        setGoogleSubmitting(false);
-      });
-  };
+  // const handleGoogleSignin = () => {
+  //   console.log('entrou');
+  //   setGoogleSubmitting(true);
+  //   // const config = {
+  //   //   iosClientId: `782607156495-2de6ecovh62rsu1ec5cduv9li7g33ki3.apps.googleusercontent.com`,
+  //   //   androidClientId: `827228531495-a4ibp8iheckl0eecjd3gjg1omkpmn1ei.apps.googleusercontent.com`,
+  //   //   scopes: ['profile', 'email'],
+  //   // };
+
+  //   const [request, response, promptAsync] = Google.useAuthRequest({
+  //     iosClientId: `782607156495-2de6ecovh62rsu1ec5cduv9li7g33ki3.apps.googleusercontent.com`,
+  //     androidClientId: `827228531495-a4ibp8iheckl0eecjd3gjg1omkpmn1ei.apps.googleusercontent.com`,
+  //     scopes: ['profile', 'email'],
+  //   });
+
+  //   //   Google.useAuthRequest(config)
+  //   //     .then((result) => {
+  //   //       const { type, user } = result;
+  //   //       if (type == 'success') {
+  //   //         console.log(user);
+  //   //         const { email, name, photoUrl } = user;
+  //   //         persistLogin({ email, name, photoUrl }, 'Google signin successful', 'SUCCESS');
+  //   //       } else {
+  //   //         handleMessage('Google Signin was cancelled');
+  //   //       }
+  //   //       setGoogleSubmitting(false);
+  //   //     })
+  //   //     .catch((error) => {
+  //   //       handleMessage('An error occurred. Check your network and try again');
+  //   //       console.log(error);
+  //   //       setGoogleSubmitting(false);
+  //   //     });
+  // };
 
   // Persisting login
   const persistLogin = (credentials, message, status) => {
-    AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
+    AsyncStorage.setItem('mulherMiguelenseCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
         // setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
@@ -185,13 +208,18 @@ const Login = ({ navigation }) => {
 
                 <Line />
 
-                {!googleSubmitting && (
-                  <StyledButton onPress={handleGoogleSignin} google={true}>
+                {request && (
+                  <StyledButton
+                    onPress={() => {
+                      promptAsync();
+                    }}
+                    google={true}
+                  >
                     <Fontisto name="google" size={25} color={primary} />
-                    <ButtonText google={true}>Sign in with Google</ButtonText>
+                    <ButtonText google={true}>Entrar com o Google</ButtonText>
                   </StyledButton>
                 )}
-                {googleSubmitting && (
+                {!request && (
                   <StyledButton disabled={true} google={true}>
                     <ActivityIndicator size="large" color={primary} />
                   </StyledButton>

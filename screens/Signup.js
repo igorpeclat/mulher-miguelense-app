@@ -102,7 +102,7 @@ const Signup = ({ navigation }) => {
 
   // Persisting login after signup
   const persistLogin = (credentials, message, status) => {
-    AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
+    AsyncStorage.setItem('mulherMiguelenseCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
         // setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
@@ -136,7 +136,7 @@ const Signup = ({ navigation }) => {
           )}
 
           <Formik
-            initialValues={{ name: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' }}
+            initialValues={{ name: '', email: '', dateOfBirth: '',zipCode: '', password: '', confirmPassword: '' }}
             onSubmit={(values, { setSubmitting }) => {
               values = { ...values, dateOfBirth: dob };
               if (
@@ -144,6 +144,7 @@ const Signup = ({ navigation }) => {
                 values.password == '' ||
                 values.name == '' ||
                 values.dateOfBirth == '' ||
+                values.zipCode == '' ||
                 values.confirmPassword == ''
               ) {
                 handleMessage('Please fill in all fields');
@@ -185,9 +186,18 @@ const Signup = ({ navigation }) => {
                   onBlur={handleBlur('dateOfBirth')}
                   value={dob ? dob.toDateString() : ''}
                   icon="calendar"
-                  editable={false}
+                  editable={true}
                   isDate={true}
                   showDatePicker={showDatePicker}
+                />
+                <MyTextInput
+                  label="CEP"
+                  placeholder="00000-000"
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange('zipCode')}
+                  onBlur={handleBlur('zipCode')}
+                  value={values.zipCode}
+                  icon="location"                  
                 />
                 <MyTextInput
                   label="Senha"
@@ -198,9 +208,7 @@ const Signup = ({ navigation }) => {
                   value={values.password}
                   secureTextEntry={hidePassword}
                   icon="lock"
-                  isPassword={true}
-                  hidePassword={hidePassword}
-                  setHidePassword={setHidePassword}
+                  
                 />
                 <MyTextInput
                   label="Confirme a Senha"
